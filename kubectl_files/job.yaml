@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: lsc-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            echo "<h1>Welcome to the HTTP server</h1>" > /mnt/lsc/index.html;
+            echo "Sample content copied to NFS-mounted PVC."
+        volumeMounts:
+        - name: lsc-content
+          mountPath: /mnt/lsc
+      restartPolicy: OnFailure
+      volumes:
+      - name: lsc-content
+        persistentVolumeClaim:
+          claimName: lsc-pvc

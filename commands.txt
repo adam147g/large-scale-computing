@@ -1,0 +1,39 @@
+sudo apt update && sudo apt install -y \
+    curl unzip python3-pip awscli jq
+
+curl -LO https://dl.k8s.io/release/v1.29.3/bin/linux/amd64/kubectl
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
+kubectl version --client
+
+curl --silent --location \
+"https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" \
+-o eksctl.tar.gz
+
+tar -xzf eksctl.tar.gz
+sudo mv eksctl /usr/local/bin/
+rm eksctl.tar.gz
+eksctl version
+
+---a)---
+aws eks create-cluster --region us-east-1 --name lsc-cluster --role-arn arn:aws:iam::671654311992:role/LabRole --resources-vpc-config subnetIds=subnet-0e2aeb6d321c8f53a,subnet-0a7562fdfba692612,securityGroupIds=sg-018e137708fbf6f24
+aws eks create-nodegroup --cluster-name lsc-cluster --nodegroup-name lsc-ng --node-role arn:aws:iam::671654311992:role/LabRole --subnet subnet-0e2aeb6d321c8f53a subnet-0a7562fdfba692612 --instance-types t3.medium --scaling-config minSize=1,maxSize=2,desiredSize=1 --disk-size 20 --ami-type AL2_x86_64
+aws eks --region us-east-1 update-kubeconfig --name lsc-cluster
+kubectl get nodes
+
+---b)---
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
+chmod 700 get_helm.sh
+./get_helm.sh
+
+helm repo add nfs-ganesha-server-and-external-provisioner https://kubernetes-sigs.github.io/nfs-ganesha-server-and-external-provisioner/
+helm install nfs-server-provisioner nfs-ganesha-server-and-external-provisioner/nfs-server-provisioner -f ./nfs-values.yaml
+
+---c)---
+kubectl apply -f ./kubectl_files/pvc.yaml
+---d)---
+kubectl apply -f ./kubectl_files/deployment.yaml
+---e)---
+kubectl apply -f ./kubectl_files/service.yaml
+---f)---
+kubectl apply -f ./kubectl_files/job.yaml

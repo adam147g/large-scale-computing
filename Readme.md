@@ -117,7 +117,3 @@ Look for the external IP in the EXTERNAL-IP column, copy it and paste it in a we
 ### Once done, you should see the sample content from the HTTP server displayed in the browser.
 ![http_page](screenshots/http_page.png)
 
-
-
-![alt text](screenshots/image-4.png)
-

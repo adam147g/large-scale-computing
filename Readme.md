@@ -117,3 +117,24 @@ Look for the external IP in the EXTERNAL-IP column, copy it and paste it in a we
 ### Once done, you should see the sample content from the HTTP server displayed in the browser.
 ![http_page](screenshots/http_page.png)
 
+-------------------------------
+
+## Short Description of the application
+This Kubernetes-based application deploys a simple HTTP server that serves static content stored on a shared NFS volume. The application runs in an Amazon EKS cluster, using Helm to provision a dynamic NFS server, which backs a Persistent Volume Claim (PVC). A Kubernetes Job is used to pre-fill the NFS volume with content. Finally, the HTTP server is exposed externally via a LoadBalancer Service, making the content accessible via a browser.
+
+### Key Features:
+- Amazon EKS: Managed Kubernetes control plane on AWS.
+
+- NFS Provisioner: Provides shared storage accessible to all pods.
+
+- Persistent Volume Claim: Ensures stateful storage for HTTP content.
+
+- Kubernetes Job: Populates NFS with sample data.
+
+- HTTP Server Deployment: Serves the content from NFS.
+
+- LoadBalancer Service: Exposes the server to the internet.
+
+### Diagram
+
+![Architecture_diagram](screenshots/Kubernetes_diagram.png)
